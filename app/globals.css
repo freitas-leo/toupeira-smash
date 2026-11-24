@@ -31,6 +31,11 @@
   }
 }
 
+.form-input {
+  cursor: url("/cursor-texto.png") 9 11, text;
+  caret-color: #174c48;
+}
+
 input:focus {
   outline: none;
 }

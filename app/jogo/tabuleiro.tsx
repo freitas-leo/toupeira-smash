@@ -166,7 +166,13 @@ export function Tabuleiro({ niveis, menuUsuario }: { niveis: NivelType[]; menuUs
             const ativa = resumo.ativa === posicao;
             return (
               <button key={tecla} type="button" className="hole" data-ativa={ativa}
-                onClick={() => acertar(posicao)} aria-disabled={!jogando}
+                onPointerDown={(evento) => {
+                  if (evento.isPrimary && evento.button === 0) acertar(posicao);
+                }}
+                onClick={(evento) => {
+                  if (evento.detail === 0) acertar(posicao);
+                }}
+                aria-disabled={!jogando}
                 aria-label={`Posição ${posicao + 1}, tecla ${tecla}${ativa ? ", toupeira ativa" : ""}`}>
                 <Toupeira ativa={ativa} />
                 <span className="keycap" aria-hidden="true">{tecla}</span>

@@ -12,6 +12,10 @@ export function listarLideres(): Promise<LiderType[]> {
   return repository.listarLideres();
 }
 
+export function listarPartidasDoPlacar(numeroNivel?: string) {
+  return repository.listarPartidasDoPlacar(numeroNivel);
+}
+
 export function listarPartidas(usuarioId: number): Promise<ResultadoType[]> {
   return repository.listarPartidas(usuarioId);
 }

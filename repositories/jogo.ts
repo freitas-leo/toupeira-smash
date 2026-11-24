@@ -31,7 +31,25 @@ export function listarLideres() {
       totalPartidasJogadas: true,
       totalAcertosGeral: true,
       usuario: { select: { nome: true } },
-      historico: { select: { registradoEm: true } },
+      historico: { select: { registradoEm: true, nivel: { select: { nome: true } } } },
+    },
+  });
+}
+
+export function listarPartidasDoPlacar(numeroNivel?: string) {
+  return prisma.historico.findMany({
+    where: {
+      usuario: { ativo: true },
+      ...(numeroNivel && { nivel: { numeroNivel } }),
+    },
+    orderBy: [{ pontuacaoTotal: "desc" }, { maiorCombo: "desc" }, { registradoEm: "desc" }, { id: "desc" }],
+    select: {
+      id: true,
+      pontuacaoTotal: true,
+      maiorCombo: true,
+      registradoEm: true,
+      usuario: { select: { nome: true } },
+      nivel: { select: { nome: true } },
     },
   });
 }
