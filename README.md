@@ -49,3 +49,22 @@ npx.cmd prisma generate
 O exemplo de conexão usa `root` sem senha em `127.0.0.1:3306`, no banco `toupeira_smash`. Ajuste o `.env` se a configuração do XAMPP for diferente. Codifique caracteres reservados da senha na URL (por exemplo, `@` vira `%40`).
 
 O SQL do Workbench forneceu o modelo inicial. Para uma instalação nova, use as migrações do Prisma, que criam as tabelas com as restrições atuais. Uma eventual transferência de dados de `mydb` exige uma migração de dados específica.
+
+## API REST
+
+Execute `npm.cmd run dev` depois de aplicar as migrações e gerar o Prisma Client. A API recebe JSON e retorna falhas no formato `{ "erro": "mensagem" }`.
+
+| Método e rota | Corpo da requisição | Resultado |
+| --- | --- | --- |
+| `POST /api/auth/cadastro` | `nome`, `email`, `senha` | Cria a conta e retorna `{ usuario }` |
+| `POST /api/auth/login` | `email`, `senha` | Define o cookie de sessão e retorna `{ usuario }` |
+| `GET /api/auth/me` | — | Retorna `{ usuario }` da sessão |
+| `POST /api/auth/logout` | — | Revoga a sessão e retorna `204` |
+| `GET /api/niveis` | — | Retorna `{ niveis }` com os tempos de exposição em milissegundos |
+| `GET /api/placar` | — | Retorna `{ lideres }` com até 50 jogadores, ordenados por pontuação e combo |
+| `GET /api/partidas` | — | Retorna `{ partidas }` com até 50 resultados recentes do jogador autenticado |
+| `POST /api/partidas` | Campos abaixo | Retorna `{ partida }` e atualiza o placar na mesma transação |
+
+Para registrar uma partida, gere `envioId` com `crypto.randomUUID()` e envie `nivelId`, `totalAparicoes`, `totalAcertos`, `totalErros`, `maiorCombo` e `duracaoSegundos` (30 no modo atual). Use o mesmo UUID ao reenviar a mesma partida. As contagens vêm do jogo no navegador e o servidor calcula `max(0, 10 × acertos − 5 × erros)`, com bônus desativado.
+
+O cookie de sessão dura sete dias. O proxy redireciona de `/jogo` para `/login` quando o cookie está ausente ou tem formato inválido. Na adaptação do frontend, a página protegida pode usar `usuarioAutenticado` de `services/auth.ts` no servidor para validar a sessão, como as rotas privadas da API já fazem.

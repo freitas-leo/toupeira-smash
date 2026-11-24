@@ -23,6 +23,7 @@ model Usuario {
   atualizadoEm DateTime    @updatedAt
   historicos   Historico[]
   placar       Placar?
+  sessoes      Sessao[]
 
   @@map("usuario")
 }
@@ -52,13 +53,25 @@ model Historico {
   registradoEm    DateTime @default(now())
   usuarioId       Int
   nivelId         Int
+  envioId         String?  @db.Char(36)
   usuario         Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
   nivel           Nivel    @relation(fields: [nivelId], references: [id], onDelete: Restrict)
   placares        Placar[]
 
   @@unique([usuarioId, id])
+  @@unique([usuarioId, envioId])
   @@index([nivelId])
   @@map("historico")
+}
+
+model Sessao {
+  tokenHash String   @id @db.Char(64)
+  expiraEm  DateTime
+  usuarioId Int
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@map("sessao")
 }
 
 model Placar {
