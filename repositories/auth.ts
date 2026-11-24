@@ -14,6 +14,10 @@ export function buscarCredenciais(email: string) {
   });
 }
 
+export function atualizarPerfil(id: number, dados: Pick<Prisma.UsuarioUpdateInput, "nome" | "email">) {
+  return prisma.usuario.update({ where: { id, ativo: true }, data: dados, select: perfil });
+}
+
 export async function criarSessao(
   usuarioId: number,
   tokenHash: string,

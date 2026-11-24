@@ -12,5 +12,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/jogo/:path*", "/api/partidas/:path*", "/api/auth/me"],
+  matcher: ["/jogo/:path*", "/perfil/:path*", "/api/partidas/:path*", "/api/auth/me"],
 };

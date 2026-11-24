@@ -1,5 +1,6 @@
 import type { LiderType, NivelType, PartidaType, ResultadoType } from "@/types/jogo";
 import { ErroApi } from "@/lib/http";
+import { calcularPontuacao, DURACAO_PARTIDA } from "@/lib/regras-jogo";
 import * as repository from "@/repositories/jogo";
 
 export async function listarNiveis(): Promise<NivelType[]> {
@@ -13,6 +14,10 @@ export function listarLideres(): Promise<LiderType[]> {
 
 export function listarPartidas(usuarioId: number): Promise<ResultadoType[]> {
   return repository.listarPartidas(usuarioId);
+}
+
+export function listarMelhoresPartidas(usuarioId: number) {
+  return repository.listarMelhoresPartidas(usuarioId);
 }
 
 function lerInteiro(dados: Record<string, unknown>, campo: string, minimo: number, maximo: number) {
@@ -37,9 +42,9 @@ export function registrarPartida(usuarioId: number, dados: Record<string, unknow
     totalAcertos,
     totalErros: lerInteiro(dados, "totalErros", 0, 1000),
     maiorCombo: lerInteiro(dados, "maiorCombo", totalAcertos > 0 ? 1 : 0, totalAcertos),
-    duracaoSegundos: lerInteiro(dados, "duracaoSegundos", 30, 30),
+    duracaoSegundos: lerInteiro(dados, "duracaoSegundos", DURACAO_PARTIDA, DURACAO_PARTIDA),
   };
-  const pontuacaoBase = Math.max(0, partida.totalAcertos * 10 - partida.totalErros * 5);
+  const pontuacaoBase = calcularPontuacao(partida.totalAcertos, partida.totalErros);
   return repository.gravarPartida({
     ...partida,
     usuarioId,

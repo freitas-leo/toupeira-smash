@@ -14,4 +14,4 @@ export type NivelType = Omit<Nivel, "fatorDificuldade"> & {
 export type LiderType = Pick<
   Placar,
   "maiorPontuacao" | "maiorComboGeral" | "totalPartidasJogadas" | "totalAcertosGeral"
-> & { usuario: Pick<Usuario, "nome"> };
+> & { usuario: Pick<Usuario, "nome">; historico: Pick<Historico, "registradoEm"> };

@@ -1,26 +1,117 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-pine: #174c48;
+  --color-leaf: #e7f6ed;
+  --color-moss: #507e6b;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  :focus-visible {
+    outline: 4px solid #fbc95b;
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .button-primary {
+    @apply inline-flex min-h-12 items-center justify-center rounded-xl bg-linear-to-b from-[#ffda7a] to-[#ffb644] px-6 py-3 font-black text-[#66421b] shadow-[0_4px_0_#d28b2c] hover:brightness-105 disabled:cursor-wait disabled:opacity-70;
+  }
+
+  .button-secondary {
+    @apply inline-flex min-h-12 items-center justify-center rounded-2xl border-2 border-[#d7ebe3] bg-white px-6 py-3 font-black text-[#2c7969] shadow-[0_6px_16px_#28694e12] hover:bg-leaf;
+  }
+
+  .form-input {
+    @apply mt-1.5 w-full rounded-xl border border-[#d9e9df] bg-[#f5faf7] px-4 py-3 transition-[background-color,border-color,box-shadow] duration-200 ease-out;
+  }
+
+  .jardim-card {
+    @apply w-full rounded-3xl border border-[#e0eee6] bg-white p-5 shadow-[0_10px_28px_#2a72501a] sm:p-8;
+  }
+}
+
+input:focus {
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: #63a48d;
+  background-color: #fff;
+  box-shadow: inset 0 1px 3px #174c4812;
+}
+
+.perfil-modal {
+  position: fixed;
+  inset: 0;
+  width: min(calc(100% - 2rem), 30rem);
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  overflow: auto;
+  border: 1px solid #d9e9df;
+  border-radius: 1.625rem;
+  background: #fff;
+  color: #174c48;
+  box-shadow: 0 24px 70px #102f2b45;
+}
+
+.perfil-modal[open] {
+  animation: perfil-entrada .22s ease-out both;
+}
+
+.perfil-modal::backdrop {
+  background: #153c4266;
+  backdrop-filter: blur(3px);
+  animation: perfil-fundo .22s ease-out both;
+}
+
+.perfil-modal-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #d9e9df;
+  background: linear-gradient(115deg, #f5faf7, #e7f6ed);
+}
+
+.perfil-modal-fechar {
+  display: grid;
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: #2c7969;
+  font-size: 1.375rem;
+  transition: background-color .2s ease-out;
+}
+
+.perfil-modal-fechar:hover { background: #d7ebe3; }
+
+.perfil-modal-form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.perfil-modal-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: .75rem;
+  margin-top: .25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0eee6;
+}
+
+@keyframes perfil-entrada {
+  from { opacity: 0; transform: translateY(8px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes perfil-fundo {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
