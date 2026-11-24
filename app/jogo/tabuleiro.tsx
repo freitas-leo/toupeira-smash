@@ -131,7 +131,17 @@ export function Tabuleiro({ niveis, menuUsuario }: { niveis: NivelType[]; menuUs
             aria-controls="painel-matematica" onClick={() => setMostrarMatematica(!mostrarMatematica)}>
             {mostrarMatematica ? "✕ Ocultar Matemática" : "∑ Ver a Matemática"}
           </button>
-          {menuUsuario}
+          <div className="flex max-w-full items-center gap-2">
+            {menuUsuario}
+            <Link href="/placar" aria-label="Placar de líderes" title="Placar de líderes"
+              className="mole-outline inline-flex h-12 shrink-0 items-center transition-colors hover:bg-leaf">
+              <span aria-hidden="true" className="inline-flex h-5 items-end gap-0.5">
+                <span className="h-3.5 w-1.5 rounded-t-sm bg-current" />
+                <span className="h-5 w-1.5 rounded-t-sm bg-current" />
+                <span className="h-2.5 w-1.5 rounded-t-sm bg-current" />
+              </span>
+            </Link>
+          </div>
         </div>
       </header>
       <section className="dashboard" aria-label="Placar">
