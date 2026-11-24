@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Usuario {
+  id           Int         @id @default(autoincrement()) @map("ID")
+  nome         String      @db.VarChar(45)
+  email        String      @unique @db.VarChar(191)
+  senhaHash    String      @map("senha") @db.VarChar(191)
+  role         Role        @default(USER)
+  ativo        Boolean     @default(true)
+  criadoEm     DateTime    @default(now())
+  atualizadoEm DateTime    @updatedAt
+  historicos   Historico[]
+  placar       Placar?
+
+  @@map("usuario")
+}
+
+model Nivel {
+  id               Int         @id @default(autoincrement()) @map("ID")
+  numeroNivel      String      @unique @db.VarChar(45)
+  nome             String      @db.VarChar(60)
+  fatorDificuldade Decimal     @db.Decimal(8, 4)
+  tempoExposicaoMs Int
+  pontosMinimos    Int
+  historicos       Historico[]
+
+  @@map("nivel")
+}
+
+model Historico {
+  id              Int      @id @default(autoincrement()) @map("ID")
+  totalAparicoes  Int
+  totalAcertos    Int
+  totalErros      Int
+  maiorCombo      Int
+  pontuacaoBase   Int
+  pontuacaoBonus  Int      @default(0)
+  pontuacaoTotal  Int
+  duracaoSegundos Int
+  registradoEm    DateTime @default(now())
+  usuarioId       Int
+  nivelId         Int
+  usuario         Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  nivel           Nivel    @relation(fields: [nivelId], references: [id], onDelete: Restrict)
+  placares        Placar[]
+
+  @@unique([usuarioId, id])
+  @@index([nivelId])
+  @@map("historico")
+}
+
+model Placar {
+  id                   Int       @id @default(autoincrement()) @map("ID")
+  maiorPontuacao       Int
+  maiorComboGeral      Int
+  totalPartidasJogadas Int
+  totalAcertosGeral    Int
+  atualizadoEm         DateTime  @updatedAt
+  usuarioId            Int       @unique(map: "placa_usuarioId_key")
+  historicoId          Int
+  usuario              Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Restrict, map: "placa_usuarioId_fkey")
+  historico            Historico @relation(fields: [usuarioId, historicoId], references: [usuarioId, id], onDelete: Restrict, map: "placa_usuarioId_historicoId_fkey")
+
+  @@index([usuarioId, historicoId], map: "placa_usuarioId_historicoId_idx")
+  @@map("placar")
+}
